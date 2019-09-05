@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% with is_edit=form.instance.pk %}
+        <div class="row">
+            <div class="col"><h2>
+                {% if is_edit %}
+                    Edit budget line
+                {% else %}
+                    Add budget line
+                {% endif %}
+            </h2></div>
+            <div class="col">
+                {% if is_edit %}
+                    <form action="{% url "line-delete" pk=form.instance.pk %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-danger float-lg-right">
+                            Delete this line?
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <form action="{% if is_edit %}
+                          {% url "line-edit" pk=form.instance.pk %}
+                      {% else %}
+                          {% url "line-create" budget_pk=budget.pk %}
+                      {% endif %}" method="post">
+            {% csrf_token %}
+            <div class="container">
+                {{ form.value|as_crispy_field }}
+                {{ form.short_description|as_crispy_field }}
+                {{ form.category|as_crispy_field }}
+                {{ form.note|as_crispy_field }}
+                <div class="row pt-3 pb-3">
+                    <div class="col">
+                        {{ form.is_income|as_crispy_field }}
+                    </div>
+                    <div class="col">
+                        {{ form.fulfilled|as_crispy_field }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success float-lg-right" type="submit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    {% endwith %}
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load template_extras %}
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h2>
+                Budget for {{ budget.get_month }}
+                Goal: {{ budget.goal }} {% price budget.purpose %}
+            </h2>
+        </div>
+        <div class="col btn-block">
+            <button class="btn btn-success" data-href="{% url "line-create" budget_pk=budget.pk %}">
+                Add budget line
+            </button>
+            <button class="btn btn-danger" data-href="{% url "budget-edit" pk=budget.pk %}">
+                Edit budget
+            </button>
+        </div>
+    </div>
+
+    <hr class="mt-0 mb-4">
+    <h3>Statistic</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col" class="bg-dark"></th>
+            <th scope="col" class="bg-primary">REAL</th>
+            <th scope="col" class="bg-primary">SOON</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="bg-primary">Total income</td>
+            <td class="bg-info">{% price budget.real_income %}</td>
+            <td class="bg-info">{% price budget.soon_income %}</td>
+        </tr>
+        <tr>
+            <td class="bg-primary">Total expense</td>
+            <td class="bg-info">{% price budget.real_expense %}</td>
+            <td class="bg-info">{% price budget.soon_expense %}</td>
+        </tr>
+        <tr>
+            <td class="bg-primary">Money left</td>
+            <td class="bg-info">{% price budget.real_difference %}</td>
+            <td class="bg-info">{% price budget.soon_difference %}</td>
+        </tr>
+        {% with budget.real_spend_per_week_higher as real_spend_per_week_higher %}
+            <tr>
+                <td class="bg-primary">Left for this week</td>
+                <td class="bg-{% if real_spend_per_week_higher %}danger{% else %}success{% endif %}">
+                    {% price budget.real_spend_per_week %}
+                </td>
+                <td class="bg-{% if real_spend_per_week_higher %}success{% else %}danger{% endif %}">
+                    {% price budget.soon_spend_per_week %}
+                </td>
+            </tr>
+        {% endwith %}
+
+
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Type</th>
+            <th scope="col">Category</th>
+            <th scope="col">Value</th>
+            <th scope="col">Description</th>
+            <th scope="col">Creator</th>
+            <th scope="col">Fulfilled</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for line in budget.all_lines %}
+            <tr data-href="{{ line.get_url }}" class="bg-{% if line.fulfilled %}success{% else %}danger{% endif %}">
+                <td>{{ line.date.day }}</td>
+                <td>{{ line.name }}</td>
+                <td>{{ line.get_category_name }}</td>
+                <td>{%  price line.value %}</td>
+                <td>{{ line.short_description }}</td>
+                <td>{{ line.creator }}</td>
+                <td>{{ line.fulfilled }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+

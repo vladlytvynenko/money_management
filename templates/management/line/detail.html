@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load template_extras %}
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h2><span class="bg-{{ line.class_style }}">
+                {{ line }}
+            </span></h2>
+        </div>
+        <div class="col">
+            <button data-href="{% url "budget-detail" pk=line.budget_id %}"
+                    class="btn btn-success btn-lg float-lg-right mb-3">
+                Budget
+            </button>
+        </div>
+    </div>
+    <hr class="mt-0 mb-4">
+
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td class="bg-dark text-white">Description</td>
+            <td class="bg-info text-white">{{ line.short_description }}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Value</td>
+            <td class="bg-info text-white">{% price line.value %}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Creation date</td>
+            <td class="bg-info text-white">{{ line.get_date }}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Note</td>
+            <td class="bg-info text-white">{{ line.get_note }}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Is fulfilled?</td>
+            <td class="bg-info text-white">{{ line.fulfilled }}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Creator</td>
+            <td class="bg-info text-white">{{ line.creator }}</td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Category</td>
+            <td class="bg-info text-white">{{ line.category }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <button data-href="{% url "line-edit" pk=line.pk %}"
+            class="btn btn-danger btn-lg float-lg-right mb-3">
+        Edit
+    </button>
+
+{% endblock %}

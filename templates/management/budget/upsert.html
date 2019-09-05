@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+    {% with is_edit=form.instance.pk %}
+        <h2>
+            {% if is_edit %}
+                Edit Budget
+            {% else %}
+                Create Budget
+            {% endif %}
+        </h2>
+        <form action="{% if is_edit %}
+                          {% url "budget-edit" pk=form.instance.pk %}
+                      {% else %}
+                          {% url "budget-create" %}
+                      {% endif %}" method="post">
+            {% csrf_token %}
+            <div class="container">
+                {{ form.start_date|as_crispy_field }}
+                {{ form.end_date|as_crispy_field }}
+                <div class="row">
+                    <div class="col">
+                        {{ form.purpose|as_crispy_field }}
+                    </div>
+                    <div class="col">
+                        {{ form.group|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {{ form.is_purpose_save_money|as_crispy_field }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success float-lg-right" type="submit">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        {#                {% if is_edit %}#}
+        {#                    <form action="{% url "budget-delete" pk=form.instance.pk %}" method="post">#}
+        {#                        {% csrf_token %}#}
+        {#                        <button class="btn btn-danger btn-sm" type="submit">#}
+        {#                            Delete#}
+        {#                        </button>#}
+        {#                    </form>#}
+        {#                {% endif %}#}
+
+
+    {% endwith %}
+{% endblock %}
